@@ -16,6 +16,8 @@ int segment_D = 16;
 int segment_E = 17;
 int segment_F = 18;
 int segment_G = 5;
+unsigned long lastDebounceTime = 0;
+unsigned long debounceDelay = 50;
 void Zero(void);
 void One(void);
 void Two(void);
@@ -50,65 +52,76 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
 
-  buttonPress = digitalRead(buttonPin);
-
-  if (buttonPress == HIGH) {
-    photoCount = analogRead(photoRes);
-    Serial.println(photoCount);
-    if (photoCount <= 4094 && photoCount >= 3686) {
-      One();
-    }
-
-    if (photoCount <= 3685 && photoCount >= 3276) {
-      Two();
-    }
-
-    if (photoCount <= 3275 && photoCount >= 2866) {
-      Three();
-    }
-
-    if (photoCount <= 2865 && photoCount >= 2456) {
-      Four();
-    }
-
-    if (photoCount <= 2455 && photoCount >= 2046) {
-      Five();
-    }
-
-    if (photoCount <= 2045 && photoCount >= 1636) {
-      Six();
-    }
-
-    if (photoCount <= 1635 && photoCount >= 1226) {
-      Seven();
-    }
-
-    if (photoCount <= 1225 && photoCount >= 816) {
-      Eight();
-    }
-
-    if (photoCount <= 816 && photoCount >= 0) {
-      Nine();
-    }
-
-
-    if (photoCount <= 4096 && photoCount >= 4095) {
-      Serial.println("Null");
-      Zero();
-      delay(200);
-    }
-
-
-    delay(2000);
-
-
+  int buttonState = digitalRead(buttonPin);
+  if (buttonState != buttonPress) {
+    lastDebounceTime = millis();
   }
 
-  else {
-    Random();
-  }
+  if ((millis() - lastDebounceTime) > debounceDelay) {
+    if (buttonState == HIGH) {
+      buttonPress = digitalRead(buttonPin);
+    } else {
 
-  /*Nine();
+
+      if (buttonPress == HIGH) {
+        photoCount = analogRead(photoRes);
+        Serial.println(photoCount);
+
+
+        if (photoCount <= 4094 && photoCount >= 3686) {
+          One();
+        }
+
+        if (photoCount <= 3685 && photoCount >= 3276) {
+          Two();
+        }
+
+        if (photoCount <= 3275 && photoCount >= 2866) {
+          Three();
+        }
+
+        if (photoCount <= 2865 && photoCount >= 2456) {
+          Four();
+        }
+
+        if (photoCount <= 2455 && photoCount >= 2046) {
+          Five();
+        }
+
+        if (photoCount <= 2045 && photoCount >= 1636) {
+          Six();
+        }
+
+        if (photoCount <= 1635 && photoCount >= 1226) {
+          Seven();
+        }
+
+        if (photoCount <= 1225 && photoCount >= 816) {
+          Eight();
+        }
+
+        if (photoCount <= 816 && photoCount >= 0) {
+          Nine();
+        }
+
+
+        if (photoCount <= 4096 && photoCount >= 4095) {
+          Serial.println("Null");
+          Zero();
+          delay(200);
+        }
+
+
+        delay(2000);
+
+      }
+
+
+      else {
+        Random();
+      }
+
+      /*Nine();
 delay(1000);
 Eight();
 delay(1000);
@@ -129,172 +142,171 @@ delay(1000);
 Zero();
 delay(1000);
 }*/
+    }
+  }
+}
+void Zero() {
+  int pinsOn[] = { segment_A, segment_B, segment_C, segment_D, segment_E, segment_F };
+  int PinsOff[] = { segment_G, segment_DP };
+  for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
+    pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
+    digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
+  }
+  for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
+    pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
+    digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
+  }
+}
+//function forms a 1 on the 7 segment display
+void One() {
+  int pinsOn[] = { segment_B, segment_C };
+  int PinsOff[] = { segment_A, segment_G, segment_DP, segment_D, segment_E, segment_F };
+  for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
+    pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
+    digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
+  }
+  for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
+    pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
+    digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
+  }
+}
+//function forms a 2 on the 7 segment display
+void Two() {
+  int pinsOn[] = { segment_B, segment_A, segment_G, segment_D, segment_E };
+  int PinsOff[] = { segment_C, segment_F, segment_DP };
+  for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
+    pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
+    digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
+  }
+  for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
+    pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
+    digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
+  }
+}
+//function forms a 3 on the 7 segment display
+void Three() {
+  int pinsOn[] = { segment_B, segment_A, segment_C, segment_D, segment_G };
+  int PinsOff[] = { segment_DP, segment_F, segment_E };
+  for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
+    pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
+    digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
+  }
+  for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
+    pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
+    digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
+  }
+}
+//function forms a 4 on the 7 segment display
+void Four() {
+  int pinsOn[] = { segment_C, segment_F, segment_B, segment_G };
+  int PinsOff[] = { segment_A, segment_DP, segment_D, segment_E };
+  for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
+    pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
+    digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
+  }
+  for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
+    pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
+    digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
+  }
+}
+//function forms a 5 on the 7 segment display
+void Five() {
+  int pinsOn[] = { segment_A, segment_G, segment_C, segment_F, segment_D };
+  int PinsOff[] = { segment_B, segment_E, segment_DP };
+  for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
+    pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
+    digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
+  }
+  for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
+    pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
+    digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
+  }
+}
+//function forms a 6 on the 7 segment display
+void Six() {
+  int pinsOn[] = { segment_C, segment_F, segment_A, segment_G, segment_D, segment_E };
+  int PinsOff[] = { segment_B, segment_DP };
+  for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
+    pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
+    digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
+  }
+  for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
+    pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
+    digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
+  }
+}
+//function forms a 7 on the 7 segment display
+void Seven() {
+  int pinsOn[] = { segment_B, segment_A, segment_C };
+  int PinsOff[] = { segment_G, segment_DP, segment_D, segment_E, segment_F };
+  for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
+    pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
+    digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
+  }
+  for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
+    pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
+    digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
+  }
+}
+//function forms a 8 on the 7 segment display
+void Eight() {
+  int pinsOn[] = { segment_B, segment_A, segment_G, segment_D, segment_E, segment_C, segment_F };
+  int PinsOff[] = { segment_DP };
+  for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
+    pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
+    digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
+  }
+  for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
+    pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
+    digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
+  }
+}
+//function forms a 9 on the 7 segment display
+void Nine() {
+  int pinsOn[] = { segment_B, segment_A, segment_G, segment_D, segment_C, segment_F };
+  int PinsOff[] = { segment_DP, segment_E };
+  for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
+    pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
+    digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
+  }
+  for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
+    pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
+    digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
+  }
 }
 
-  void Zero() {
-    int pinsOn[] = { segment_A, segment_B, segment_C, segment_D, segment_E, segment_F };
-    int PinsOff[] = { segment_G, segment_DP };
-    for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
-      pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
-      digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
-    }
-    for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
-      pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
-      digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
-    }
-  }
-  //function forms a 1 on the 7 segment display
-  void One() {
-    int pinsOn[] = { segment_B, segment_C };
-    int PinsOff[] = { segment_A, segment_G, segment_DP, segment_D, segment_E, segment_F };
-    for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
-      pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
-      digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
-    }
-    for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
-      pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
-      digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
-    }
-  }
-  //function forms a 2 on the 7 segment display
-  void Two() {
-    int pinsOn[] = { segment_B, segment_A, segment_G, segment_D, segment_E };
-    int PinsOff[] = { segment_C, segment_F, segment_DP };
-    for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
-      pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
-      digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
-    }
-    for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
-      pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
-      digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
-    }
-  }
-  //function forms a 3 on the 7 segment display
-  void Three() {
-    int pinsOn[] = { segment_B, segment_A, segment_C, segment_D, segment_G };
-    int PinsOff[] = { segment_DP, segment_F, segment_E };
-    for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
-      pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
-      digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
-    }
-    for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
-      pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
-      digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
-    }
-  }
-  //function forms a 4 on the 7 segment display
-  void Four() {
-    int pinsOn[] = { segment_C, segment_F, segment_B, segment_G };
-    int PinsOff[] = { segment_A, segment_DP, segment_D, segment_E };
-    for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
-      pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
-      digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
-    }
-    for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
-      pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
-      digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
-    }
-  }
-  //function forms a 5 on the 7 segment display
-  void Five() {
-    int pinsOn[] = { segment_A, segment_G, segment_C, segment_F, segment_D };
-    int PinsOff[] = { segment_B, segment_E, segment_DP };
-    for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
-      pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
-      digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
-    }
-    for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
-      pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
-      digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
-    }
-  }
-  //function forms a 6 on the 7 segment display
-  void Six() {
-    int pinsOn[] = { segment_C, segment_F, segment_A, segment_G, segment_D, segment_E };
-    int PinsOff[] = { segment_B, segment_DP };
-    for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
-      pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
-      digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
-    }
-    for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
-      pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
-      digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
-    }
-  }
-  //function forms a 7 on the 7 segment display
-  void Seven() {
-    int pinsOn[] = { segment_B, segment_A, segment_C };
-    int PinsOff[] = { segment_G, segment_DP, segment_D, segment_E, segment_F };
-    for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
-      pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
-      digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
-    }
-    for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
-      pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
-      digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
-    }
-  }
-  //function forms a 8 on the 7 segment display
-  void Eight() {
-    int pinsOn[] = { segment_B, segment_A, segment_G, segment_D, segment_E, segment_C, segment_F };
-    int PinsOff[] = { segment_DP };
-    for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
-      pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
-      digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
-    }
-    for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
-      pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
-      digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
-    }
-  }
-  //function forms a 9 on the 7 segment display
-  void Nine() {
-    int pinsOn[] = { segment_B, segment_A, segment_G, segment_D, segment_C, segment_F };
-    int PinsOff[] = { segment_DP, segment_E };
-    for (int i = 0; i < sizeof(pinsOn) / sizeof(int); i++) {
-      pinMode(pinsOn[i], OUTPUT);     // Set each pin as OUTPUT
-      digitalWrite(pinsOn[i], HIGH);  // Set each pin to HIGH
-    }
-    for (int i = 0; i < sizeof(PinsOff) / sizeof(int); i++) {
-      pinMode(PinsOff[i], OUTPUT);    // Set each pin as OUTPUT
-      digitalWrite(PinsOff[i], LOW);  // Set each pin to LOW
-    }
-  }
 
+void Random() {
 
-  void Random() {
+  /* potRead = analogRead(potRes);
+  Serial.println("Potentiometer reading");
+  Serial.println(potRead);*/
 
-    potRead = analogRead(potRes);
-     Serial.println("Potentiometer reading");
-      Serial.println(potRead);
+  digitalWrite(segment_A, HIGH);
+  delay(400);
+  digitalWrite(segment_A, LOW);
 
-    digitalWrite(segment_A, HIGH);
-    delay(400);
-    digitalWrite(segment_A, LOW);
+  digitalWrite(segment_B, HIGH);
+  delay(400);
+  digitalWrite(segment_B, LOW);
 
-    digitalWrite(segment_B, HIGH);
-    delay(400);
-    digitalWrite(segment_B, LOW);
+  digitalWrite(segment_C, HIGH);
+  delay(400);
+  digitalWrite(segment_C, LOW);
 
-    digitalWrite(segment_C, HIGH);
-    delay(400);
-    digitalWrite(segment_C, LOW);
+  digitalWrite(segment_D, HIGH);
+  delay(400);
+  digitalWrite(segment_D, LOW);
 
-    digitalWrite(segment_D, HIGH);
-    delay(400);
-    digitalWrite(segment_D, LOW);
+  digitalWrite(segment_E, HIGH);
+  delay(400);
+  digitalWrite(segment_E, LOW);
 
-    digitalWrite(segment_E, HIGH);
-    delay(400);
-    digitalWrite(segment_E, LOW);
+  digitalWrite(segment_F, HIGH);
+  delay(400);
+  digitalWrite(segment_F, LOW);
 
-    digitalWrite(segment_F, HIGH);
-    delay(400);
-    digitalWrite(segment_F, LOW);
-
-    digitalWrite(segment_G, HIGH);
-    delay(400);
-    digitalWrite(segment_G, LOW);
-   
-  }
-
+  digitalWrite(segment_G, HIGH);
+  delay(400);
+  digitalWrite(segment_G, LOW);
+}
