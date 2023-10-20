@@ -1,23 +1,21 @@
 #include <Arduino.h>
 
-int potRead = 0;
+ float potRead = 0;
 int potRes;
 int compB;
 int buttonPress = LOW;
-const int buttonPin = 33;
-int Pot = 34;
+const int buttonPin = 25;
+int Pot = 33;
 int photoCount = 0;
 const int photoRes = 35;
-int segment_A = 15;
-int segment_B = 2;
-int segment_DP = 0;
-int segment_C = 4;
-int segment_D = 16;
-int segment_E = 17;
-int segment_F = 18;
-int segment_G = 5;
-unsigned long lastDebounceTime = 0;
-unsigned long debounceDelay = 50;
+int segment_A = 45;
+int segment_B = 43;
+int segment_DP = 41;
+int segment_C = 39;
+int segment_D = 37;
+int segment_E = 35;
+int segment_F = 33;
+int segment_G = 31;
 void Zero(void);
 void One(void);
 void Two(void);
@@ -43,108 +41,111 @@ void setup() {
   pinMode(segment_G, OUTPUT);
   pinMode(photoRes, INPUT);
   pinMode(Pot, INPUT);
-
+  pinMode(buttonPin, INPUT);
   Serial.begin(9600);
-  pinMode(buttonPin, INPUT_PULLUP);
 }
 
 
 void loop() {
   // put your main code here, to run repeatedly:
 
-  int buttonState = digitalRead(buttonPin);
-  if (buttonState != buttonPress) {
-    lastDebounceTime = millis();
-  }
-
-  if ((millis() - lastDebounceTime) > debounceDelay) {
-    if (buttonState == HIGH) {
-      buttonPress = digitalRead(buttonPin);
-    } else {
 
 
-      if (buttonPress == HIGH) {
-        photoCount = analogRead(photoRes);
-        Serial.println(photoCount);
+  buttonPress = digitalRead(buttonPin);
+ // Serial.print("buttonPress ");
+ // Serial.println(buttonPress);
+
+   if (buttonPress == HIGH) {
+      
+      photoCount = analogRead(photoRes);
+      Serial.println(photoCount);
 
 
-        if (photoCount <= 4094 && photoCount >= 3686) {
-          One();
-        }
 
-        if (photoCount <= 3685 && photoCount >= 3276) {
-          Two();
-        }
-
-        if (photoCount <= 3275 && photoCount >= 2866) {
-          Three();
-        }
-
-        if (photoCount <= 2865 && photoCount >= 2456) {
-          Four();
-        }
-
-        if (photoCount <= 2455 && photoCount >= 2046) {
-          Five();
-        }
-
-        if (photoCount <= 2045 && photoCount >= 1636) {
-          Six();
-        }
-
-        if (photoCount <= 1635 && photoCount >= 1226) {
-          Seven();
-        }
-
-        if (photoCount <= 1225 && photoCount >= 816) {
-          Eight();
-        }
-
-        if (photoCount <= 816 && photoCount >= 0) {
-          Nine();
-        }
-
-
-        if (photoCount <= 4096 && photoCount >= 4095) {
-          Serial.println("Null");
-          Zero();
-          delay(200);
-        }
-
-
-        delay(2000);
-
+      if (photoCount <= 4094 && photoCount >= 3686) {
+        One();
       }
+
+      if (photoCount <= 3685 && photoCount >= 3276) {
+        Two();
+      }
+
+      if (photoCount <= 3275 && photoCount >= 2866) {
+        Three();
+      }
+
+      if (photoCount <= 2865 && photoCount >= 2456) {
+        Four();
+      }
+
+      if (photoCount <= 2455 && photoCount >= 2046) {
+        Five();
+      }
+
+      if (photoCount <= 2045 && photoCount >= 1636) {
+        Six();
+      }
+
+      if (photoCount <= 1635 && photoCount >= 1226) {
+        Seven();
+      }
+
+      if (photoCount <= 1225 && photoCount >= 816) {
+        Eight();
+      }
+
+      if (photoCount <= 816 && photoCount >= 0) {
+        Nine();
+      }
+
+
+      if (photoCount <= 4096 && photoCount >= 4095) {
+        Serial.println("Null");
+        Zero();
+        delay(200);
+      }
+
+
+     delay(2000);
+      buttonPress = digitalRead(buttonPin);
+   }
 
 
       else {
-        Random();
+        //Random();
+         potRead = analogRead(potRes);
+  Serial.print("Potentiometer reading  ");
+  Serial.println(potRead);
+  
       }
 
-      /*Nine();
-delay(1000);
-Eight();
-delay(1000);
-Seven();
-delay(1000);
-Six();
-delay(1000);
-Five();
-delay(1000);
-Four();
-delay(1000);
-Three();
-delay(1000);
-Two();
-delay(1000);
-One();
-delay(1000);
-Zero();
-delay(1000);
+   
+  /*Nine();
+  delay(1000);
+  Eight();
+  delay(1000);
+  Seven();
+  delay(1000);
+  Six();
+  delay(1000);
+  Five();
+  delay(1000);
+  Four();
+  delay(1000);
+  Three();
+  delay(1000);
+  Two();
+  delay(1000);
+  One();
+  delay(1000);
+  Zero();
+  delay(1000);
 }*/
-    }
-  }
+
+
 }
+
+
 void Zero() {
   int pinsOn[] = { segment_A, segment_B, segment_C, segment_D, segment_E, segment_F };
   int PinsOff[] = { segment_G, segment_DP };
@@ -278,9 +279,13 @@ void Nine() {
 
 void Random() {
 
-  /* potRead = analogRead(potRes);
+ 
+
+   potRead = analogRead(potRes);
   Serial.println("Potentiometer reading");
-  Serial.println(potRead);*/
+  Serial.println(potRead);
+
+
 
   digitalWrite(segment_A, HIGH);
   delay(400);
