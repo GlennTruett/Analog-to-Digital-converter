@@ -1,21 +1,21 @@
 #include <Arduino.h>
 
- float potRead = 0;
-int potRes;
+int ledDel = 0;
+int potRead = 0;
 int compB;
 int buttonPress = LOW;
-const int buttonPin = 25;
-int Pot = 33;
+const int buttonPin = 48;
+int Pot = A1;
 int photoCount = 0;
-const int photoRes = 35;
-int segment_A = 45;
-int segment_B = 43;
-int segment_DP = 41;
-int segment_C = 39;
-int segment_D = 37;
-int segment_E = 35;
-int segment_F = 33;
-int segment_G = 31;
+const int photoRes = A0;
+int segment_A = 40;
+int segment_B = 38;
+int segment_DP = 36;
+int segment_C = 34;
+int segment_D = 32;
+int segment_E = 30;
+int segment_F = 28;
+int segment_G = 26;
 void Zero(void);
 void One(void);
 void Two(void);
@@ -52,74 +52,72 @@ void loop() {
 
 
   buttonPress = digitalRead(buttonPin);
- // Serial.print("buttonPress ");
- // Serial.println(buttonPress);
+  Serial.print("buttonPress ");
+  Serial.println(buttonPress);
 
-   if (buttonPress == HIGH) {
-      
-      photoCount = analogRead(photoRes);
-      Serial.println(photoCount);
+  if (buttonPress == HIGH) {
 
-
-
-      if (photoCount <= 4094 && photoCount >= 3686) {
-        One();
-      }
-
-      if (photoCount <= 3685 && photoCount >= 3276) {
-        Two();
-      }
-
-      if (photoCount <= 3275 && photoCount >= 2866) {
-        Three();
-      }
-
-      if (photoCount <= 2865 && photoCount >= 2456) {
-        Four();
-      }
-
-      if (photoCount <= 2455 && photoCount >= 2046) {
-        Five();
-      }
-
-      if (photoCount <= 2045 && photoCount >= 1636) {
-        Six();
-      }
-
-      if (photoCount <= 1635 && photoCount >= 1226) {
-        Seven();
-      }
-
-      if (photoCount <= 1225 && photoCount >= 816) {
-        Eight();
-      }
-
-      if (photoCount <= 816 && photoCount >= 0) {
-        Nine();
-      }
+    photoCount = analogRead(photoRes);
+    Serial.print("Photo sensor ");
+    Serial.println(photoCount);
 
 
-      if (photoCount <= 4096 && photoCount >= 4095) {
-        Serial.println("Null");
-        Zero();
-        delay(200);
-      }
+
+    if (photoCount <= 149 && photoCount >= 50) {
+      One();
+    }
+
+    if (photoCount <= 199 && photoCount >= 150) {
+      Two();
+    }
+
+    if (photoCount <= 249 && photoCount >= 200) {
+      Three();
+    }
+
+    if (photoCount <= 299 && photoCount >= 250) {
+      Four();
+    }
+
+    if (photoCount <= 349 && photoCount >= 300) {
+      Five();
+    }
+
+    if (photoCount <= 399 && photoCount >= 350) {
+      Six();
+    }
+
+    if (photoCount <= 549 && photoCount >= 400) {
+      Seven();
+    }
+
+    if (photoCount <= 599 && photoCount >= 550) {
+      Eight();
+    }
+
+    if (photoCount <= 700 && photoCount >= 600) {
+      Nine();
+    }
 
 
-     delay(2000);
-      buttonPress = digitalRead(buttonPin);
-   }
+    if (photoCount <= 49 && photoCount >= 0) {
+      Serial.println("Null");
+      Zero();
+    }
+
+    delay(1000);
+    
+  }
 
 
-      else {
-        //Random();
-         potRead = analogRead(potRes);
-  Serial.print("Potentiometer reading  ");
-  Serial.println(potRead);
-  
-      }
+  else {
+    Random();
+   /* potRead = analogRead(Pot);
+    Serial.print("Potentiometer reading  ");
+    Serial.println(potRead);*/
+  }
 
-   
+
   /*Nine();
   delay(1000);
   Eight();
@@ -141,8 +139,6 @@ void loop() {
   Zero();
   delay(1000);
 }*/
-
-
 }
 
 
@@ -279,39 +275,59 @@ void Nine() {
 
 void Random() {
 
- 
 
-   potRead = analogRead(potRes);
+
+
+  potRead = analogRead(Pot);
   Serial.println("Potentiometer reading");
   Serial.println(potRead);
 
+  if (potRead <= 780 && potRead >= 500) {
+    ledDel = 100;
+  }
+
+  if (potRead <= 499 && potRead >= 300) {
+    ledDel = 200;
+  }
+
+  if (potRead <= 299 && potRead >= 200) {
+    ledDel = 300;
+  }
+
+  if (potRead <= 199 && potRead >= 100) {
+    ledDel = 400;
+  }
+
+  if (potRead <= 99 && potRead >= 0) {
+    ledDel = 500;
+  }
 
 
   digitalWrite(segment_A, HIGH);
-  delay(400);
+  delay(ledDel);
   digitalWrite(segment_A, LOW);
 
   digitalWrite(segment_B, HIGH);
-  delay(400);
+  delay(ledDel);
   digitalWrite(segment_B, LOW);
 
   digitalWrite(segment_C, HIGH);
-  delay(400);
+  delay(ledDel);
   digitalWrite(segment_C, LOW);
 
   digitalWrite(segment_D, HIGH);
-  delay(400);
+  delay(ledDel);
   digitalWrite(segment_D, LOW);
 
   digitalWrite(segment_E, HIGH);
-  delay(400);
+  delay(ledDel);
   digitalWrite(segment_E, LOW);
 
   digitalWrite(segment_F, HIGH);
-  delay(400);
+  delay(ledDel);
   digitalWrite(segment_F, LOW);
 
   digitalWrite(segment_G, HIGH);
-  delay(400);
+  delay(ledDel);
   digitalWrite(segment_G, LOW);
 }
